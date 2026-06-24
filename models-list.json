@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "modelId": "gpt-4o",
+      "categories": [
+        "text"
+      ],
+      "keywords": [
+        "gpt",
+        "chat"
+      ]
+    },
+    {
+      "modelId": "dall-e-3",
+      "categories": [
+        "image"
+      ],
+      "keywords": [
+        "dall-e"
+      ]
+    },
+    {
+      "modelId": "whisper-1",
+      "categories": [
+        "audio"
+      ],
+      "keywords": [
+        "whisper",
+        "speech"
+      ]
+    },
+    {
+      "modelId": "tts-1",
+      "categories": [
+        "audio"
+      ],
+      "keywords": [
+        "tts",
+        "audio"
+      ]
+    },
+    {
+      "modelId": "deepseek-vl2",
+      "categories": [
+        "image"
+      ],
+      "keywords": [
+        "vl",
+        "vision"
+      ]
+    },
+    {
+      "modelId": "claude-3-opus",
+      "categories": [
+        "text"
+      ],
+      "keywords": [
+        "claude",
+        "opus"
+      ]
+    },
+    {
+      "modelId": "sora",
+      "categories": [
+        "video"
+      ],
+      "keywords": [
+        "sora",
+        "video",
+        "gen-"
+      ]
+    }
+  ]
+}
