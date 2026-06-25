@@ -2,73 +2,48 @@
   "version": "1.0",
   "rules": [
     {
-      "modelId": "gpt-4o",
+      "modelId": "agnes-1.5-flash",
       "categories": [
         "text"
       ],
       "keywords": [
-        "gpt",
-        "chat"
+        "agnes-1.5-flash"
       ]
     },
     {
-      "modelId": "dall-e-3",
-      "categories": [
-        "image"
-      ],
-      "keywords": [
-        "dall-e"
-      ]
-    },
-    {
-      "modelId": "whisper-1",
-      "categories": [
-        "audio"
-      ],
-      "keywords": [
-        "whisper",
-        "speech"
-      ]
-    },
-    {
-      "modelId": "tts-1",
-      "categories": [
-        "audio"
-      ],
-      "keywords": [
-        "tts",
-        "audio"
-      ]
-    },
-    {
-      "modelId": "deepseek-vl2",
-      "categories": [
-        "image"
-      ],
-      "keywords": [
-        "vl",
-        "vision"
-      ]
-    },
-    {
-      "modelId": "claude-3-opus",
+      "modelId": "agnes-2.0-flash",
       "categories": [
         "text"
       ],
       "keywords": [
-        "claude",
-        "opus"
+        "agnes-2.0-flash"
       ]
     },
     {
-      "modelId": "sora",
+      "modelId": "agnes-video-v2.0",
       "categories": [
         "video"
       ],
       "keywords": [
-        "sora",
-        "video",
-        "gen-"
+        "agnes-video-v2.0"
+      ]
+    },
+    {
+      "modelId": "agnes-image-2.0-flash",
+      "categories": [
+        "image"
+      ],
+      "keywords": [
+        "agnes-image-2.0-flash"
+      ]
+    },
+    {
+      "modelId": "agnes-image-2.1-flash",
+      "categories": [
+        "image"
+      ],
+      "keywords": [
+        "agnes-image-2.1-flash"
       ]
     }
   ]
