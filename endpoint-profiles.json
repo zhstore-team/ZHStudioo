@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-06-27T02:51:42.066Z",
+  "exportedAt": "2026-06-27T05:12:43.805Z",
   "profiles": [
     {
       "id": "OpenAI",
@@ -12,10 +12,10 @@
         "headerName": "Authorization",
         "valueTemplate": "Bearer {apiKey}"
       },
-      "version": 1,
+      "version": 19,
       "isBuiltin": true,
       "createdAt": 1782411560788,
-      "updatedAt": 1782424639400,
+      "updatedAt": 1782537151117,
       "endpoints": [
         {
           "key": "text",
@@ -308,10 +308,10 @@
         "headerName": "x-api-key",
         "valueTemplate": "{apiKey}"
       },
-      "version": 1,
+      "version": 19,
       "isBuiltin": true,
       "createdAt": 1782411560788,
-      "updatedAt": 1782411560788,
+      "updatedAt": 1782537151118,
       "endpoints": [
         {
           "key": "text",
@@ -367,398 +367,6 @@
       ]
     },
     {
-      "id": "Agnes",
-      "name": "Agnes Video",
-      "icon": "lucide:video",
-      "baseUrl": "https://apihub.agnes-ai.com",
-      "auth": {
-        "type": "bearer",
-        "headerName": "Authorization",
-        "valueTemplate": "Bearer {apiKey}"
-      },
-      "version": 1,
-      "isBuiltin": true,
-      "createdAt": 1782411560788,
-      "updatedAt": 1782411560788,
-      "endpoints": [
-        {
-          "key": "video_gen",
-          "label": "视频生成",
-          "method": "POST",
-          "pathTemplate": "/v1/videos",
-          "bodyMappings": [
-            {
-              "from": "model",
-              "to": "model",
-              "type": "string",
-              "required": true
-            },
-            {
-              "from": "prompt",
-              "to": "prompt",
-              "type": "string",
-              "required": true
-            },
-            {
-              "from": "image",
-              "to": "image",
-              "type": "string",
-              "condition": {
-                "field": "image",
-                "operator": "exists"
-              },
-              "description": "图生视频：传入单张图片 URL"
-            },
-            {
-              "from": "images",
-              "to": "extra_body.image",
-              "type": "array",
-              "condition": {
-                "field": "images",
-                "operator": "exists"
-              },
-              "description": "多图视频生成：传入图片 URL 数组"
-            },
-            {
-              "from": "num_frames",
-              "to": "num_frames",
-              "type": "number",
-              "default": 121
-            },
-            {
-              "from": "frame_rate",
-              "to": "frame_rate",
-              "type": "number",
-              "default": 24
-            },
-            {
-              "from": "seed",
-              "to": "seed",
-              "type": "number"
-            }
-          ],
-          "response": {
-            "asyncTask": {
-              "statusField": "status",
-              "statusValues": {
-                "done": [
-                  "completed",
-                  "succeeded"
-                ],
-                "failed": [
-                  "failed",
-                  "error"
-                ]
-              },
-              "taskIdFields": [
-                "video_id",
-                "id",
-                "task_id"
-              ],
-              "resultField": "remixed_from_video_id"
-            },
-            "errorField": "error.message"
-          },
-          "id": "00004000-0000-4000-8000-000000000000"
-        },
-        {
-          "key": "video_query",
-          "label": "视频查询（推荐）",
-          "method": "GET",
-          "pathTemplate": "/agnesapi?video_id={taskId}",
-          "bodyMappings": [],
-          "response": {
-            "asyncTask": {
-              "statusField": "status",
-              "statusValues": {
-                "done": [
-                  "completed",
-                  "succeeded"
-                ],
-                "failed": [
-                  "failed",
-                  "error"
-                ]
-              },
-              "taskIdFields": [],
-              "resultField": "remixed_from_video_id"
-            },
-            "errorField": "error.message"
-          },
-          "id": "80000000-4000-4040-80c0-000040000000"
-        },
-        {
-          "key": "video_query_legacy",
-          "label": "视频查询（兼容）",
-          "method": "GET",
-          "pathTemplate": "/v1/videos/{taskId}",
-          "bodyMappings": [],
-          "response": {
-            "asyncTask": {
-              "statusField": "status",
-              "statusValues": {
-                "done": [
-                  "completed",
-                  "succeeded"
-                ],
-                "failed": [
-                  "failed",
-                  "error"
-                ]
-              },
-              "taskIdFields": [],
-              "resultField": "remixed_from_video_id"
-            },
-            "errorField": "error.message"
-          },
-          "id": "00004000-4080-4000-8000-000000004000"
-        }
-      ]
-    },
-    {
-      "id": "Agnes-copy-1782411690708",
-      "name": "Agnes端点配置",
-      "icon": "lucide:video",
-      "baseUrl": "https://apihub.agnes-ai.com/v1",
-      "auth": {
-        "type": "bearer",
-        "headerName": "Authorization",
-        "valueTemplate": "Bearer {apiKey}"
-      },
-      "version": 1,
-      "isBuiltin": false,
-      "createdAt": 1782411690708,
-      "updatedAt": 1782526289552,
-      "endpoints": [
-        {
-          "key": "video_gen",
-          "label": "视频生成",
-          "method": "POST",
-          "pathTemplate": "/v1/videos",
-          "bodyMappings": [
-            {
-              "from": "model",
-              "to": "model",
-              "type": "string",
-              "required": true
-            },
-            {
-              "from": "prompt",
-              "to": "prompt",
-              "type": "string",
-              "required": true
-            },
-            {
-              "from": "image",
-              "to": "image",
-              "type": "string",
-              "condition": {
-                "field": "image",
-                "operator": "exists"
-              },
-              "description": "图生视频：传入单张图片 URL"
-            },
-            {
-              "from": "images",
-              "to": "extra_body.image",
-              "type": "array",
-              "condition": {
-                "field": "images",
-                "operator": "exists"
-              },
-              "description": "多图视频生成：传入图片 URL 数组"
-            },
-            {
-              "from": "num_frames",
-              "to": "num_frames",
-              "type": "number",
-              "default": 121
-            },
-            {
-              "from": "frame_rate",
-              "to": "frame_rate",
-              "type": "number",
-              "default": 24
-            },
-            {
-              "from": "seed",
-              "to": "seed",
-              "type": "number"
-            }
-          ],
-          "response": {
-            "asyncTask": {
-              "statusField": "status",
-              "statusValues": {
-                "done": [
-                  "completed",
-                  "succeeded"
-                ],
-                "failed": [
-                  "failed",
-                  "error"
-                ]
-              },
-              "taskIdFields": [
-                "video_id",
-                "id",
-                "task_id"
-              ],
-              "resultField": "remixed_from_video_id"
-            },
-            "errorField": "error.message"
-          },
-          "pollingInterval": 10,
-          "timeout": 600,
-          "id": "80004080-0000-4040-8000-000040003800"
-        },
-        {
-          "key": "video_query",
-          "label": "视频查询（推荐）",
-          "method": "GET",
-          "pathTemplate": "/agnesapi?video_id={taskId}",
-          "bodyMappings": [],
-          "response": {
-            "asyncTask": {
-              "statusField": "status",
-              "statusValues": {
-                "done": [
-                  "completed",
-                  "succeeded"
-                ],
-                "failed": [
-                  "failed",
-                  "error"
-                ]
-              },
-              "taskIdFields": [],
-              "resultField": "remixed_from_video_id"
-            },
-            "errorField": "error.message"
-          },
-          "pollingInterval": 10,
-          "timeout": 600,
-          "id": "00400000-0000-4000-8000-000040808000"
-        },
-        {
-          "key": "video_query_legacy",
-          "label": "视频查询（兼容）",
-          "method": "GET",
-          "pathTemplate": "/v1/videos/{taskId}",
-          "bodyMappings": [],
-          "response": {
-            "asyncTask": {
-              "statusField": "status",
-              "statusValues": {
-                "done": [
-                  "completed",
-                  "succeeded"
-                ],
-                "failed": [
-                  "failed",
-                  "error"
-                ]
-              },
-              "taskIdFields": [],
-              "resultField": "remixed_from_video_id"
-            },
-            "errorField": "error.message"
-          },
-          "pollingInterval": 10,
-          "timeout": 600,
-          "id": "80b80000-0038-4040-8040-000000000000"
-        },
-        {
-          "key": "text",
-          "label": "文本",
-          "method": "POST",
-          "pathTemplate": "/v1/chat/completions",
-          "bodyMappings": [
-            {
-              "from": "model",
-              "to": "model",
-              "type": "string"
-            },
-            {
-              "from": "messages",
-              "to": "messages",
-              "type": "array"
-            },
-            {
-              "from": "thinking",
-              "to": "chat_template_kwargs.enable_thinking",
-              "type": "boolean"
-            },
-            {
-              "from": "stream",
-              "to": "stream",
-              "type": "boolean"
-            }
-          ],
-          "response": {
-            "syncResult": {
-              "field": "choices[0].message.content",
-              "listField": "data[].url"
-            },
-            "errorField": "error.message",
-            "errorMessageField": "error"
-          },
-          "pollingInterval": 3,
-          "timeout": 600,
-          "id": "00000000-0038-4000-8000-000038100040"
-        },
-        {
-          "key": "image_gen",
-          "label": "图像",
-          "method": "POST",
-          "pathTemplate": "/v1/images/generations",
-          "bodyMappings": [
-            {
-              "from": "messages",
-              "to": "essages",
-              "type": "string"
-            },
-            {
-              "from": "model",
-              "to": "model",
-              "type": "string"
-            },
-            {
-              "from": "prompt",
-              "to": "prompt",
-              "type": "string"
-            },
-            {
-              "from": "image",
-              "to": "extra_body.image",
-              "type": "string",
-              "condition": {
-                "field": "image",
-                "operator": "exists"
-              },
-              "transform": {
-                "type": "tostring"
-              }
-            },
-            {
-              "from": "size1",
-              "to": "size",
-              "type": "string"
-            }
-          ],
-          "response": {
-            "syncResult": {
-              "field": "choices[0].message.content",
-              "listField": ""
-            }
-          },
-          "pollingInterval": 3,
-          "timeout": 600,
-          "id": "00000000-0000-4040-8000-000000380000"
-        }
-      ]
-    },
-    {
       "id": "OpenAI-copy-1782427497767",
       "name": "Running Hub",
       "icon": "lucide:bot",
@@ -768,10 +376,10 @@
         "headerName": "Authorization",
         "valueTemplate": "Bearer {apiKey}"
       },
-      "version": 1,
+      "version": 2,
       "isBuiltin": false,
-      "createdAt": 1782427497767,
-      "updatedAt": 1782430584198,
+      "createdAt": 1782536586135,
+      "updatedAt": 1782537151120,
       "endpoints": [
         {
           "key": "/rhart-image/z-image/turbo-lora",
@@ -859,10 +467,10 @@
         "headerName": "Authorization",
         "valueTemplate": "Bearer {apiKey}"
       },
-      "version": 1,
+      "version": 2,
       "isBuiltin": false,
-      "createdAt": 1782507820949,
-      "updatedAt": 1782509532894,
+      "createdAt": 1782536586135,
+      "updatedAt": 1782537151120,
       "endpoints": [
         {
           "key": "text",
@@ -1161,6 +769,155 @@
             "errorField": "error.message"
           },
           "id": "c0000000-0000-4000-8000-000000000000"
+        }
+      ]
+    },
+    {
+      "id": "Agnes",
+      "name": "Agnes Video",
+      "icon": "lucide:video",
+      "baseUrl": "https://apihub.agnes-ai.com",
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization",
+        "valueTemplate": "Bearer {apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": false,
+      "createdAt": 1782537151119,
+      "updatedAt": 1782537151119,
+      "endpoints": [
+        {
+          "key": "video_gen",
+          "label": "视频生成",
+          "method": "POST",
+          "pathTemplate": "/v1/videos",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string",
+              "condition": {
+                "field": "image",
+                "operator": "exists"
+              },
+              "description": "图生视频：传入单张图片 URL"
+            },
+            {
+              "from": "images",
+              "to": "extra_body.image",
+              "type": "array",
+              "condition": {
+                "field": "images",
+                "operator": "exists"
+              },
+              "description": "多图视频生成：传入图片 URL 数组"
+            },
+            {
+              "from": "num_frames",
+              "to": "num_frames",
+              "type": "number",
+              "default": 121
+            },
+            {
+              "from": "frame_rate",
+              "to": "frame_rate",
+              "type": "number",
+              "default": 24
+            },
+            {
+              "from": "seed",
+              "to": "seed",
+              "type": "number"
+            }
+          ],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [
+                "video_id",
+                "id",
+                "task_id"
+              ],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00004000-0000-4000-8000-000000000000"
+        },
+        {
+          "key": "video_query",
+          "label": "视频查询（推荐）",
+          "method": "GET",
+          "pathTemplate": "/agnesapi?video_id={taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "id": "80000000-4000-4040-80c0-000040000000"
+        },
+        {
+          "key": "video_query_legacy",
+          "label": "视频查询（兼容）",
+          "method": "GET",
+          "pathTemplate": "/v1/videos/{taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00004000-4080-4000-8000-000000004000"
         }
       ]
     }
