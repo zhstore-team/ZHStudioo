@@ -1,0 +1,1168 @@
+{
+  "version": 2,
+  "exportedAt": "2026-06-27T02:51:42.066Z",
+  "profiles": [
+    {
+      "id": "OpenAI",
+      "name": "OpenAI 兼容",
+      "icon": "lucide:bot",
+      "baseUrl": "https://api.openai.com/v1",
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization",
+        "valueTemplate": "Bearer {apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": true,
+      "createdAt": 1782411560788,
+      "updatedAt": 1782424639400,
+      "endpoints": [
+        {
+          "key": "text",
+          "label": "文本",
+          "method": "POST",
+          "pathTemplate": "/chat/completions",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "messages",
+              "to": "messages",
+              "type": "array",
+              "required": true
+            },
+            {
+              "from": "max_tokens",
+              "to": "max_tokens",
+              "type": "number",
+              "default": 4096
+            },
+            {
+              "from": "temperature",
+              "to": "temperature",
+              "type": "number"
+            },
+            {
+              "from": "top_p",
+              "to": "top_p",
+              "type": "number"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "choices[0].message.content"
+            },
+            "errorField": "error.message"
+          },
+          "id": "c0004080-0000-4000-8000-000040004078"
+        },
+        {
+          "key": "image_gen",
+          "label": "生图",
+          "method": "POST",
+          "pathTemplate": "/images/generations",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "n",
+              "to": "n",
+              "type": "number",
+              "default": 1
+            },
+            {
+              "from": "size",
+              "to": "size",
+              "type": "string",
+              "default": "1024x1024"
+            }
+          ],
+          "response": {
+            "errorField": "error.message",
+            "syncResult": {
+              "field": "choices[0].message.content",
+              "listField": "data[].url"
+            }
+          },
+          "id": "00000000-0040-4000-8000-004000000000"
+        },
+        {
+          "key": "image_edit",
+          "label": "图片编辑",
+          "method": "POST",
+          "pathTemplate": "/images/edits",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string"
+            },
+            {
+              "from": "n",
+              "to": "n",
+              "type": "number",
+              "default": 1
+            },
+            {
+              "from": "size",
+              "to": "size",
+              "type": "string",
+              "default": "1024x1024"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "listField": "data[].url"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00000000-0040-4000-8040-000000000040"
+        },
+        {
+          "key": "video_gen",
+          "label": "视频生成",
+          "method": "POST",
+          "pathTemplate": "/videos",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string",
+              "condition": {
+                "field": "image",
+                "operator": "exists"
+              }
+            },
+            {
+              "from": "n",
+              "to": "n",
+              "type": "number",
+              "default": 1
+            }
+          ],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded",
+                  "done"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [
+                "id",
+                "task_id",
+                "taskId"
+              ],
+              "resultField": "video.url",
+              "resultListField": "data[].url"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00004000-0000-4000-8000-400000000040"
+        },
+        {
+          "key": "video_query",
+          "label": "视频查询",
+          "method": "GET",
+          "pathTemplate": "/videos/{taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded",
+                  "done"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "video.url",
+              "resultListField": "data[].url"
+            },
+            "errorField": "error.message"
+          },
+          "id": "d0c00000-0000-4000-8000-000000000000"
+        },
+        {
+          "key": "audio_speech",
+          "label": "音频生成",
+          "method": "POST",
+          "pathTemplate": "/audio/speech",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "input",
+              "to": "input",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "voice",
+              "to": "voice",
+              "type": "string",
+              "default": "alloy"
+            },
+            {
+              "from": "format",
+              "to": "response_format",
+              "type": "string",
+              "default": "mp3"
+            }
+          ],
+          "response": {
+            "isBinary": true,
+            "binaryContentType": "audio/mpeg",
+            "errorField": "error.message"
+          },
+          "id": "00400000-0040-4000-8000-000000000000"
+        },
+        {
+          "key": "audio_transcriptions",
+          "label": "语音转文字",
+          "method": "POST",
+          "pathTemplate": "/audio/transcriptions",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "input",
+              "to": "input",
+              "type": "string"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "text"
+            },
+            "errorField": "error.message"
+          },
+          "id": "f0800000-0040-4000-8000-000000000000"
+        }
+      ]
+    },
+    {
+      "id": "Anthropic",
+      "name": "Anthropic",
+      "icon": "lucide:brain",
+      "baseUrl": "https://api.anthropic.com",
+      "auth": {
+        "type": "api-key",
+        "headerName": "x-api-key",
+        "valueTemplate": "{apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": true,
+      "createdAt": 1782411560788,
+      "updatedAt": 1782411560788,
+      "endpoints": [
+        {
+          "key": "text",
+          "label": "文本",
+          "method": "POST",
+          "pathTemplate": "/v1/messages",
+          "headers": {
+            "anthropic-version": "2023-06-01"
+          },
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "messages",
+              "to": "messages",
+              "type": "array",
+              "required": true
+            },
+            {
+              "from": "max_tokens",
+              "to": "max_tokens",
+              "type": "number",
+              "default": 4096
+            },
+            {
+              "from": "system",
+              "to": "system",
+              "type": "string"
+            },
+            {
+              "from": "temperature",
+              "to": "temperature",
+              "type": "number"
+            },
+            {
+              "from": "top_p",
+              "to": "top_p",
+              "type": "number"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "content[0].text"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00000000-0000-4000-8000-000000004000"
+        }
+      ]
+    },
+    {
+      "id": "Agnes",
+      "name": "Agnes Video",
+      "icon": "lucide:video",
+      "baseUrl": "https://apihub.agnes-ai.com",
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization",
+        "valueTemplate": "Bearer {apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": true,
+      "createdAt": 1782411560788,
+      "updatedAt": 1782411560788,
+      "endpoints": [
+        {
+          "key": "video_gen",
+          "label": "视频生成",
+          "method": "POST",
+          "pathTemplate": "/v1/videos",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string",
+              "condition": {
+                "field": "image",
+                "operator": "exists"
+              },
+              "description": "图生视频：传入单张图片 URL"
+            },
+            {
+              "from": "images",
+              "to": "extra_body.image",
+              "type": "array",
+              "condition": {
+                "field": "images",
+                "operator": "exists"
+              },
+              "description": "多图视频生成：传入图片 URL 数组"
+            },
+            {
+              "from": "num_frames",
+              "to": "num_frames",
+              "type": "number",
+              "default": 121
+            },
+            {
+              "from": "frame_rate",
+              "to": "frame_rate",
+              "type": "number",
+              "default": 24
+            },
+            {
+              "from": "seed",
+              "to": "seed",
+              "type": "number"
+            }
+          ],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [
+                "video_id",
+                "id",
+                "task_id"
+              ],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00004000-0000-4000-8000-000000000000"
+        },
+        {
+          "key": "video_query",
+          "label": "视频查询（推荐）",
+          "method": "GET",
+          "pathTemplate": "/agnesapi?video_id={taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "id": "80000000-4000-4040-80c0-000040000000"
+        },
+        {
+          "key": "video_query_legacy",
+          "label": "视频查询（兼容）",
+          "method": "GET",
+          "pathTemplate": "/v1/videos/{taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00004000-4080-4000-8000-000000004000"
+        }
+      ]
+    },
+    {
+      "id": "Agnes-copy-1782411690708",
+      "name": "Agnes端点配置",
+      "icon": "lucide:video",
+      "baseUrl": "https://apihub.agnes-ai.com/v1",
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization",
+        "valueTemplate": "Bearer {apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": false,
+      "createdAt": 1782411690708,
+      "updatedAt": 1782526289552,
+      "endpoints": [
+        {
+          "key": "video_gen",
+          "label": "视频生成",
+          "method": "POST",
+          "pathTemplate": "/v1/videos",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string",
+              "condition": {
+                "field": "image",
+                "operator": "exists"
+              },
+              "description": "图生视频：传入单张图片 URL"
+            },
+            {
+              "from": "images",
+              "to": "extra_body.image",
+              "type": "array",
+              "condition": {
+                "field": "images",
+                "operator": "exists"
+              },
+              "description": "多图视频生成：传入图片 URL 数组"
+            },
+            {
+              "from": "num_frames",
+              "to": "num_frames",
+              "type": "number",
+              "default": 121
+            },
+            {
+              "from": "frame_rate",
+              "to": "frame_rate",
+              "type": "number",
+              "default": 24
+            },
+            {
+              "from": "seed",
+              "to": "seed",
+              "type": "number"
+            }
+          ],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [
+                "video_id",
+                "id",
+                "task_id"
+              ],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "pollingInterval": 10,
+          "timeout": 600,
+          "id": "80004080-0000-4040-8000-000040003800"
+        },
+        {
+          "key": "video_query",
+          "label": "视频查询（推荐）",
+          "method": "GET",
+          "pathTemplate": "/agnesapi?video_id={taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "pollingInterval": 10,
+          "timeout": 600,
+          "id": "00400000-0000-4000-8000-000040808000"
+        },
+        {
+          "key": "video_query_legacy",
+          "label": "视频查询（兼容）",
+          "method": "GET",
+          "pathTemplate": "/v1/videos/{taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "remixed_from_video_id"
+            },
+            "errorField": "error.message"
+          },
+          "pollingInterval": 10,
+          "timeout": 600,
+          "id": "80b80000-0038-4040-8040-000000000000"
+        },
+        {
+          "key": "text",
+          "label": "文本",
+          "method": "POST",
+          "pathTemplate": "/v1/chat/completions",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string"
+            },
+            {
+              "from": "messages",
+              "to": "messages",
+              "type": "array"
+            },
+            {
+              "from": "thinking",
+              "to": "chat_template_kwargs.enable_thinking",
+              "type": "boolean"
+            },
+            {
+              "from": "stream",
+              "to": "stream",
+              "type": "boolean"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "choices[0].message.content",
+              "listField": "data[].url"
+            },
+            "errorField": "error.message",
+            "errorMessageField": "error"
+          },
+          "pollingInterval": 3,
+          "timeout": 600,
+          "id": "00000000-0038-4000-8000-000038100040"
+        },
+        {
+          "key": "image_gen",
+          "label": "图像",
+          "method": "POST",
+          "pathTemplate": "/v1/images/generations",
+          "bodyMappings": [
+            {
+              "from": "messages",
+              "to": "essages",
+              "type": "string"
+            },
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string"
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string"
+            },
+            {
+              "from": "image",
+              "to": "extra_body.image",
+              "type": "string",
+              "condition": {
+                "field": "image",
+                "operator": "exists"
+              },
+              "transform": {
+                "type": "tostring"
+              }
+            },
+            {
+              "from": "size1",
+              "to": "size",
+              "type": "string"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "choices[0].message.content",
+              "listField": ""
+            }
+          },
+          "pollingInterval": 3,
+          "timeout": 600,
+          "id": "00000000-0000-4040-8000-000000380000"
+        }
+      ]
+    },
+    {
+      "id": "OpenAI-copy-1782427497767",
+      "name": "Running Hub",
+      "icon": "lucide:bot",
+      "baseUrl": "https://api.openai.com/v1",
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization",
+        "valueTemplate": "Bearer {apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": false,
+      "createdAt": 1782427497767,
+      "updatedAt": 1782430584198,
+      "endpoints": [
+        {
+          "key": "/rhart-image/z-image/turbo-lora",
+          "label": "z-image加速生图-0.03元",
+          "method": "POST",
+          "pathTemplate": "/rhart-image/z-image/turbo-lora",
+          "staticBody": {
+            "aspectRatio": "3:4",
+            "outputFormat": "png"
+          },
+          "bodyMappings": [
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string"
+            }
+          ],
+          "response": {
+            "errorField": "errorMessage",
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [
+                "taskId"
+              ],
+              "resultField": "results.url",
+              "progressField": "QUEUED, RUNNING , SUCCESS ,FAILED",
+              "queryEndpointKey": "image_query"
+            },
+            "errorMessageField": "errorMessage"
+          },
+          "id": "00000040-0040-4000-8080-c0004080c000"
+        },
+        {
+          "key": "image_query",
+          "label": "image_query",
+          "method": "POST",
+          "pathTemplate": "/query",
+          "bodyMappings": [
+            {
+              "from": "taskId",
+              "to": "taskId",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "errorField": "errorMessage",
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "SUCCESS",
+                  "COMPLETED"
+                ],
+                "failed": [
+                  "FAILED"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "results[0].url"
+            },
+            "errorMessageField": "errorMessage"
+          },
+          "id": "40004000-4000-4000-8000-000000000000"
+        }
+      ]
+    },
+    {
+      "id": "OpenAI-copy-1782507820949",
+      "name": "OpenCode",
+      "icon": "lucide:bot",
+      "baseUrl": "https://api.openai.com/v1",
+      "auth": {
+        "type": "bearer",
+        "headerName": "Authorization",
+        "valueTemplate": "Bearer {apiKey}"
+      },
+      "version": 1,
+      "isBuiltin": false,
+      "createdAt": 1782507820949,
+      "updatedAt": 1782509532894,
+      "endpoints": [
+        {
+          "key": "text",
+          "label": "文本",
+          "method": "POST",
+          "pathTemplate": "/chat/completions",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "messages",
+              "to": "messages",
+              "type": "array",
+              "required": true
+            },
+            {
+              "from": "max_tokens",
+              "to": "max_tokens",
+              "type": "number",
+              "default": "128000"
+            },
+            {
+              "from": "temperature",
+              "to": "temperature",
+              "type": "number"
+            },
+            {
+              "from": "top_p",
+              "to": "top_p",
+              "type": "number"
+            },
+            {
+              "from": "thinking",
+              "to": "chat_template_kwargs.enable_thinking",
+              "type": "boolean"
+            },
+            {
+              "from": "stream",
+              "to": "stream",
+              "type": "boolean"
+            },
+            {
+              "from": "reasoning_effort",
+              "to": "reasoning_effort",
+              "type": "string"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "choices[0].message.content",
+              "listField": "data[].url"
+            },
+            "errorField": "error.message",
+            "errorMessageField": "error"
+          },
+          "pollingInterval": 3,
+          "timeout": 600,
+          "id": "c0000000-4000-4000-8040-000038000000"
+        },
+        {
+          "key": "image_gen",
+          "label": "生图",
+          "method": "POST",
+          "pathTemplate": "/images/generations",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "n",
+              "to": "n",
+              "type": "number",
+              "default": 1
+            },
+            {
+              "from": "size",
+              "to": "size",
+              "type": "string",
+              "default": "1024x1024"
+            }
+          ],
+          "response": {
+            "errorField": "error.message",
+            "syncResult": {
+              "field": "choices[0].message.content",
+              "listField": "data[].url"
+            }
+          },
+          "id": "60004000-0040-4000-8000-004000000000"
+        },
+        {
+          "key": "image_edit",
+          "label": "图片编辑",
+          "method": "POST",
+          "pathTemplate": "/images/edits",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string"
+            },
+            {
+              "from": "n",
+              "to": "n",
+              "type": "number",
+              "default": 1
+            },
+            {
+              "from": "size",
+              "to": "size",
+              "type": "string",
+              "default": "1024x1024"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "listField": "data[].url"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00000000-4000-4040-8040-000040000040"
+        },
+        {
+          "key": "video_gen",
+          "label": "视频生成",
+          "method": "POST",
+          "pathTemplate": "/videos",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "prompt",
+              "to": "prompt",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "image",
+              "to": "image",
+              "type": "string",
+              "condition": {
+                "field": "image",
+                "operator": "exists"
+              }
+            },
+            {
+              "from": "n",
+              "to": "n",
+              "type": "number",
+              "default": 1
+            }
+          ],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded",
+                  "done"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [
+                "id",
+                "task_id",
+                "taskId"
+              ],
+              "resultField": "video.url",
+              "resultListField": "data[].url"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00400040-0000-4000-8078-60004080c000"
+        },
+        {
+          "key": "video_query",
+          "label": "视频查询",
+          "method": "GET",
+          "pathTemplate": "/videos/{taskId}",
+          "bodyMappings": [],
+          "response": {
+            "asyncTask": {
+              "statusField": "status",
+              "statusValues": {
+                "done": [
+                  "completed",
+                  "succeeded",
+                  "done"
+                ],
+                "failed": [
+                  "failed",
+                  "error"
+                ]
+              },
+              "taskIdFields": [],
+              "resultField": "video.url",
+              "resultListField": "data[].url"
+            },
+            "errorField": "error.message"
+          },
+          "id": "00004000-0040-4000-8000-0000408080c0"
+        },
+        {
+          "key": "audio_speech",
+          "label": "音频生成",
+          "method": "POST",
+          "pathTemplate": "/audio/speech",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "input",
+              "to": "input",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "voice",
+              "to": "voice",
+              "type": "string",
+              "default": "alloy"
+            },
+            {
+              "from": "format",
+              "to": "response_format",
+              "type": "string",
+              "default": "mp3"
+            }
+          ],
+          "response": {
+            "isBinary": true,
+            "binaryContentType": "audio/mpeg",
+            "errorField": "error.message"
+          },
+          "id": "00000000-0000-4000-8000-000038000040"
+        },
+        {
+          "key": "audio_transcriptions",
+          "label": "语音转文字",
+          "method": "POST",
+          "pathTemplate": "/audio/transcriptions",
+          "bodyMappings": [
+            {
+              "from": "model",
+              "to": "model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "from": "input",
+              "to": "input",
+              "type": "string"
+            }
+          ],
+          "response": {
+            "syncResult": {
+              "field": "text"
+            },
+            "errorField": "error.message"
+          },
+          "id": "c0000000-0000-4000-8000-000000000000"
+        }
+      ]
+    }
+  ]
+}
