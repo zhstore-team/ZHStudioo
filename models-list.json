@@ -1,50 +1,615 @@
 {
-  "version": "1.0",
-  "rules": [
+  "version": "2.0",
+  "vendors": [
     {
-      "modelId": "agnes-1.5-flash",
-      "categories": [
-        "text"
+      "id": "mr2ytrsk-u2m0ou",
+      "name": "Agnes",
+      "order": 0,
+      "source": "local",
+      "models": [
+        {
+          "modelId": "agnes-1.5-flash",
+          "categories": [
+            "text"
+          ],
+          "keywords": [
+            "agnes-1.5-flash"
+          ],
+          "capabilities": [
+            "text_generate"
+          ],
+          "capabilityParams": {
+            "text_generate": {
+              "think": true,
+              "stream": true
+            }
+          },
+          "source": "local",
+          "capabilityEndpoints": {
+            "text_generate": "text"
+          },
+          "capabilityEndpointDefs": {
+            "text_generate": {
+              "id": "00000000-0038-4000-8000-000038100040",
+              "key": "text",
+              "label": "文本",
+              "method": "POST",
+              "pathTemplate": "/v1/chat/completions",
+              "bodyMappings": [
+                {
+                  "from": "model",
+                  "to": "model",
+                  "type": "string"
+                },
+                {
+                  "from": "messages",
+                  "to": "messages",
+                  "type": "array"
+                },
+                {
+                  "from": "thinking",
+                  "to": "chat_template_kwargs.enable_thinking",
+                  "type": "boolean"
+                },
+                {
+                  "from": "stream",
+                  "to": "stream",
+                  "type": "boolean"
+                }
+              ],
+              "response": {
+                "syncResult": {
+                  "field": "choices[0].message.content",
+                  "listField": "data[].url"
+                },
+                "errorField": "error.message",
+                "errorMessageField": "error",
+                "asyncTask": {
+                  "statusField": "status",
+                  "statusValues": {
+                    "done": [
+                      "completed",
+                      "succeeded"
+                    ],
+                    "failed": [
+                      "failed",
+                      "error"
+                    ]
+                  },
+                  "taskIdFields": [
+                    "video_id",
+                    "id",
+                    "task_id"
+                  ],
+                  "resultField": "remixed_from_video_id",
+                  "resultListField": "data[].url",
+                  "queryEndpointKey": "video_query",
+                  "progressField": "progress"
+                },
+                "isBinary": true,
+                "binaryContentType": "audio/mpeg",
+                "activeMode": "sync",
+                "raw": true
+              },
+              "pollingInterval": 3,
+              "timeout": 600,
+              "capabilityBindings": [
+                {
+                  "capabilityId": "text_generate",
+                  "paramDefaults": {
+                    "structured_output": true,
+                    "think": true,
+                    "stream": true
+                  }
+                },
+                {
+                  "capabilityId": "image_analysis",
+                  "paramDefaults": {
+                    "stream": true
+                  }
+                }
+              ]
+            }
+          },
+          "capabilityCustomParamDefs": {}
+        },
+        {
+          "modelId": "agnes-2.0-flash",
+          "categories": [
+            "text"
+          ],
+          "keywords": [
+            "agnes-2.0-flash"
+          ],
+          "source": "local",
+          "capabilities": [
+            "text_generate"
+          ],
+          "capabilityParams": {},
+          "capabilityEndpoints": {
+            "text_generate": "text"
+          },
+          "capabilityEndpointDefs": {
+            "text_generate": {
+              "id": "00000000-0038-4000-8000-000038100040",
+              "key": "text",
+              "label": "文本",
+              "method": "POST",
+              "pathTemplate": "/v1/chat/completions",
+              "bodyMappings": [
+                {
+                  "from": "model",
+                  "to": "model",
+                  "type": "string"
+                },
+                {
+                  "from": "messages",
+                  "to": "messages",
+                  "type": "array"
+                },
+                {
+                  "from": "thinking",
+                  "to": "chat_template_kwargs.enable_thinking",
+                  "type": "boolean"
+                },
+                {
+                  "from": "stream",
+                  "to": "stream",
+                  "type": "boolean"
+                }
+              ],
+              "response": {
+                "syncResult": {
+                  "field": "choices[0].message.content",
+                  "listField": "data[].url"
+                },
+                "errorField": "error.message",
+                "errorMessageField": "error",
+                "asyncTask": {
+                  "statusField": "status",
+                  "statusValues": {
+                    "done": [
+                      "completed",
+                      "succeeded"
+                    ],
+                    "failed": [
+                      "failed",
+                      "error"
+                    ]
+                  },
+                  "taskIdFields": [
+                    "video_id",
+                    "id",
+                    "task_id"
+                  ],
+                  "resultField": "remixed_from_video_id",
+                  "resultListField": "data[].url",
+                  "queryEndpointKey": "video_query",
+                  "progressField": "progress"
+                },
+                "isBinary": true,
+                "binaryContentType": "audio/mpeg",
+                "activeMode": "sync",
+                "raw": true
+              },
+              "pollingInterval": 3,
+              "timeout": 600,
+              "capabilityBindings": [
+                {
+                  "capabilityId": "text_generate",
+                  "paramDefaults": {
+                    "structured_output": true,
+                    "think": true,
+                    "stream": true
+                  }
+                },
+                {
+                  "capabilityId": "image_analysis",
+                  "paramDefaults": {
+                    "stream": true
+                  }
+                }
+              ]
+            }
+          },
+          "capabilityCustomParamDefs": {}
+        },
+        {
+          "modelId": "agnes-image-2.1-flash",
+          "categories": [
+            "image"
+          ],
+          "keywords": [
+            "agnes-image-2.1-flash"
+          ],
+          "source": "local",
+          "capabilities": [
+            "image_generate"
+          ],
+          "capabilityEndpoints": {
+            "image_generate": "image_gen"
+          },
+          "capabilityEndpointDefs": {
+            "image_generate": {
+              "id": "00000000-0000-4040-8000-000000380000",
+              "key": "image_gen",
+              "label": "图像",
+              "method": "POST",
+              "pathTemplate": "/v1/images/generations",
+              "bodyMappings": [
+                {
+                  "from": "messages",
+                  "to": "essages",
+                  "type": "string"
+                },
+                {
+                  "from": "model",
+                  "to": "model",
+                  "type": "string"
+                },
+                {
+                  "from": "prompt",
+                  "to": "prompt",
+                  "type": "string"
+                },
+                {
+                  "from": "image",
+                  "to": "extra_body.image",
+                  "type": "string",
+                  "condition": {
+                    "field": "image",
+                    "operator": "exists"
+                  },
+                  "transform": {
+                    "type": "tostring"
+                  }
+                },
+                {
+                  "from": "size",
+                  "to": "size",
+                  "type": "string"
+                }
+              ],
+              "response": {
+                "syncResult": {
+                  "field": "choices[0].message.content",
+                  "listField": ""
+                },
+                "asyncTask": {
+                  "statusField": "status",
+                  "statusValues": {
+                    "done": [
+                      "completed",
+                      "succeeded"
+                    ],
+                    "failed": [
+                      "failed",
+                      "error"
+                    ]
+                  },
+                  "taskIdFields": [
+                    "video_id",
+                    "id",
+                    "task_id"
+                  ],
+                  "resultField": "remixed_from_video_id",
+                  "resultListField": "data[].url",
+                  "queryEndpointKey": "video_query",
+                  "progressField": "progress"
+                },
+                "isBinary": true,
+                "binaryContentType": "audio/mpeg",
+                "activeMode": "sync"
+              },
+              "pollingInterval": 3,
+              "timeout": 600
+            }
+          }
+        },
+        {
+          "modelId": "agnes-image-2.0-flash",
+          "categories": [
+            "image"
+          ],
+          "keywords": [
+            "agnes-image-2.0-flash"
+          ],
+          "source": "local",
+          "capabilities": [
+            "image_generate"
+          ],
+          "capabilityParams": {},
+          "capabilityEndpoints": {
+            "image_generate": "image_gen"
+          },
+          "capabilityEndpointDefs": {
+            "image_generate": {
+              "id": "00000000-0000-4040-8000-000000380000",
+              "key": "image_gen",
+              "label": "图像",
+              "method": "POST",
+              "pathTemplate": "/v1/images/generations",
+              "bodyMappings": [
+                {
+                  "from": "messages",
+                  "to": "essages",
+                  "type": "string"
+                },
+                {
+                  "from": "model",
+                  "to": "model",
+                  "type": "string"
+                },
+                {
+                  "from": "prompt",
+                  "to": "prompt",
+                  "type": "string"
+                },
+                {
+                  "from": "image",
+                  "to": "extra_body.image",
+                  "type": "string",
+                  "condition": {
+                    "field": "image",
+                    "operator": "exists"
+                  },
+                  "transform": {
+                    "type": "tostring"
+                  }
+                },
+                {
+                  "from": "size",
+                  "to": "size",
+                  "type": "string"
+                }
+              ],
+              "response": {
+                "syncResult": {
+                  "field": "choices[0].message.content",
+                  "listField": ""
+                },
+                "asyncTask": {
+                  "statusField": "status",
+                  "statusValues": {
+                    "done": [
+                      "completed",
+                      "succeeded"
+                    ],
+                    "failed": [
+                      "failed",
+                      "error"
+                    ]
+                  },
+                  "taskIdFields": [
+                    "video_id",
+                    "id",
+                    "task_id"
+                  ],
+                  "resultField": "remixed_from_video_id",
+                  "resultListField": "data[].url",
+                  "queryEndpointKey": "video_query",
+                  "progressField": "progress"
+                },
+                "isBinary": true,
+                "binaryContentType": "audio/mpeg",
+                "activeMode": "sync"
+              },
+              "pollingInterval": 3,
+              "timeout": 600
+            }
+          },
+          "capabilityCustomParamDefs": {}
+        },
+        {
+          "modelId": "agnes-video-v2.0",
+          "categories": [
+            "video"
+          ],
+          "keywords": [
+            "agnes-video-v2.0"
+          ],
+          "source": "local",
+          "capabilities": [
+            "video_text_to_video",
+            "video_image_to_video"
+          ],
+          "capabilityParams": {},
+          "capabilityEndpoints": {
+            "video_text_to_video": "video_gen",
+            "video_image_to_video": "video_gen"
+          },
+          "capabilityEndpointDefs": {
+            "video_text_to_video": {
+              "id": "80004080-0000-4040-8000-000040003800",
+              "key": "video_gen",
+              "label": "视频生成",
+              "method": "POST",
+              "pathTemplate": "/v1/videos",
+              "bodyMappings": [
+                {
+                  "from": "model",
+                  "to": "model",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "from": "prompt",
+                  "to": "prompt",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "from": "image",
+                  "to": "image",
+                  "type": "string",
+                  "condition": {
+                    "field": "image",
+                    "operator": "exists"
+                  },
+                  "description": "图生视频：传入单张图片 URL"
+                },
+                {
+                  "from": "images",
+                  "to": "extra_body.image",
+                  "type": "array",
+                  "condition": {
+                    "field": "images",
+                    "operator": "exists"
+                  },
+                  "description": "多图视频生成：传入图片 URL 数组"
+                },
+                {
+                  "from": "num_frames",
+                  "to": "num_frames",
+                  "type": "number",
+                  "default": 121
+                },
+                {
+                  "from": "frame_rate",
+                  "to": "frame_rate",
+                  "type": "number",
+                  "default": 24
+                },
+                {
+                  "from": "seed",
+                  "to": "seed",
+                  "type": "number"
+                }
+              ],
+              "response": {
+                "asyncTask": {
+                  "statusField": "status",
+                  "statusValues": {
+                    "done": [
+                      "completed",
+                      "succeeded"
+                    ],
+                    "failed": [
+                      "failed",
+                      "error"
+                    ]
+                  },
+                  "taskIdFields": [
+                    "video_id",
+                    "id",
+                    "task_id"
+                  ],
+                  "resultField": "remixed_from_video_id",
+                  "queryEndpointKey": "video_query",
+                  "progressField": "progress"
+                },
+                "errorField": "error.message",
+                "syncResult": {
+                  "field": "choices[0].message.content",
+                  "listField": "data[].url"
+                },
+                "isBinary": true,
+                "binaryContentType": "audio/mpeg",
+                "activeMode": "async",
+                "errorMessageField": "error"
+              },
+              "pollingInterval": 10,
+              "timeout": 600
+            },
+            "video_image_to_video": {
+              "id": "80004080-0000-4040-8000-000040003800",
+              "key": "video_gen",
+              "label": "视频生成",
+              "method": "POST",
+              "pathTemplate": "/v1/videos",
+              "bodyMappings": [
+                {
+                  "from": "model",
+                  "to": "model",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "from": "prompt",
+                  "to": "prompt",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "from": "image",
+                  "to": "image",
+                  "type": "string",
+                  "condition": {
+                    "field": "image",
+                    "operator": "exists"
+                  },
+                  "description": "图生视频：传入单张图片 URL"
+                },
+                {
+                  "from": "images",
+                  "to": "extra_body.image",
+                  "type": "array",
+                  "condition": {
+                    "field": "images",
+                    "operator": "exists"
+                  },
+                  "description": "多图视频生成：传入图片 URL 数组"
+                },
+                {
+                  "from": "num_frames",
+                  "to": "num_frames",
+                  "type": "number",
+                  "default": 121
+                },
+                {
+                  "from": "frame_rate",
+                  "to": "frame_rate",
+                  "type": "number",
+                  "default": 24
+                },
+                {
+                  "from": "seed",
+                  "to": "seed",
+                  "type": "number"
+                }
+              ],
+              "response": {
+                "asyncTask": {
+                  "statusField": "status",
+                  "statusValues": {
+                    "done": [
+                      "completed",
+                      "succeeded"
+                    ],
+                    "failed": [
+                      "failed",
+                      "error"
+                    ]
+                  },
+                  "taskIdFields": [
+                    "video_id",
+                    "id",
+                    "task_id"
+                  ],
+                  "resultField": "remixed_from_video_id",
+                  "queryEndpointKey": "video_query",
+                  "progressField": "progress"
+                },
+                "errorField": "error.message",
+                "syncResult": {
+                  "field": "choices[0].message.content",
+                  "listField": "data[].url"
+                },
+                "isBinary": true,
+                "binaryContentType": "audio/mpeg",
+                "activeMode": "async",
+                "errorMessageField": "error"
+              },
+              "pollingInterval": 10,
+              "timeout": 600
+            }
+          }
+        }
       ],
-      "keywords": [
-        "agnes-1.5-flash"
-      ]
-    },
-    {
-      "modelId": "agnes-2.0-flash",
-      "categories": [
-        "text"
-      ],
-      "keywords": [
-        "agnes-2.0-flash"
-      ]
-    },
-    {
-      "modelId": "agnes-video-v2.0",
-      "categories": [
-        "video"
-      ],
-      "keywords": [
-        "agnes-video-v2.0"
-      ]
-    },
-    {
-      "modelId": "agnes-image-2.0-flash",
-      "categories": [
-        "image"
-      ],
-      "keywords": [
-        "agnes-image-2.0-flash"
-      ]
-    },
-    {
-      "modelId": "agnes-image-2.1-flash",
-      "categories": [
-        "image"
-      ],
-      "keywords": [
-        "agnes-image-2.1-flash"
-      ]
+      "createdAt": 1782964161524,
+      "updatedAt": 1782980800427,
+      "endpointType": "Agnes-copy-1782411690708"
     }
-  ]
+  ],
+  "exportedAt": "2026-07-02T08:27:00.539Z"
 }
