@@ -3,597 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>流光粒子</title>
+<title>智绘Studio - 获取激活码</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{overflow:hidden;background:#000;height:100vh;font-family:'Segoe UI',system-ui,sans-serif}
-canvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh}
-
-/* 控制面板 */
-.panel{
-  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
-  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
-  padding:10px 16px;background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.08);border-radius:14px;
-  z-index:10;pointer-events:all;max-width:92vw;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-primary:#0a0a0a;--bg-card:#141414;--bg-secondary:#1a1a1a;
+  --text-primary:#fff;--text-secondary:#a0a0a0;--text-tertiary:#666;
+  --accent:#4a9eff;--green:#22c55e;--orange:#f59e0b;
+  --border:#2a2a2a;--radius:12px;
+  --font-mono:'Cascadia Code','Fira Code','JetBrains Mono',Consolas,monospace
 }
-.panel button{
-  padding:6px 16px;background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.1);border-radius:8px;
-  color:rgba(255,255,255,0.6);font-size:13px;letter-spacing:1px;
-  cursor:pointer;transition:all .3s;white-space:nowrap;
+html{scroll-behavior:smooth}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+.section{max-width:1000px;margin:0 auto;padding:80px 24px}
+.section-title{font-size:28px;font-weight:700;text-align:center;margin-bottom:12px}
+.section-desc{text-align:center;color:var(--text-secondary);margin-bottom:48px;font-size:15px}
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+#particle-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+.hero-content{position:relative;z-index:1;max-width:800px;padding:0 24px}
+.hero h1{font-size:48px;font-weight:700;line-height:1.2;margin-bottom:12px}
+.hero h1 span{color:var(--accent)}
+.hero .tagline{font-size:16px;color:var(--text-secondary);margin-bottom:32px;line-height:1.7}
+.hero-features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px}
+.hero-feat{background:rgba(20,20,20,.7);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:16px 14px;text-align:left;transition:transform .3s,border-color .3s}
+.hero-feat:hover{transform:translateY(-2px);border-color:rgba(74,158,255,.3)}
+.hero-feat .hf-icon{width:32px;height:32px;border-radius:8px;background:rgba(74,158,255,.12);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.hero-feat .hf-icon svg{width:16px;height:16px;color:var(--accent)}
+.hero-feat h4{font-size:14px;font-weight:600;margin-bottom:4px}
+.hero-feat p{font-size:12px;color:var(--text-tertiary);line-height:1.5}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:32px}
+.hero-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);color:var(--accent)}
+.hero-tag.green{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.2);color:var(--green)}
+.hero-tag svg{width:12px;height:12px}
+.btn-cta{display:inline-block;padding:14px 36px;background:linear-gradient(135deg,var(--accent),#3a7ecc);color:#fff;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,158,255,.35)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:transform .3s,box-shadow .3s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.feature-card .icon{width:44px;height:44px;border-radius:10px;background:rgba(74,158,255,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.feature-card .icon svg{width:22px;height:22px;color:var(--accent)}
+.feature-card h3{font-size:18px;font-weight:600;margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--text-secondary);line-height:1.7}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.ai-tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px}
+.ai-tag.free{background:rgba(74,158,255,.15);color:var(--accent)}
+.ai-tag.pro{background:rgba(34,197,94,.15);color:var(--green)}
+.ai-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:transform .3s,box-shadow .3s}
+.ai-card:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(0,0,0,.4)}
+.ai-card h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.ai-card p{font-size:13px;color:var(--text-secondary)}
+.steps{display:flex;align-items:flex-start;gap:0;position:relative}
+.step{flex:1;text-align:center;position:relative;padding:0 12px}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;margin:0 auto 14px}
+.step h4{font-size:16px;font-weight:600;margin-bottom:6px}
+.step p{font-size:13px;color:var(--text-secondary)}
+.step-arrow{position:absolute;top:20px;right:-16px;color:var(--text-tertiary);font-size:20px;z-index:1}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:760px;margin:0 auto}
+.price-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 28px;position:relative;transition:transform .3s}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.pro{border-color:var(--accent)}
+.price-card.pro::before{content:'推荐';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:12px;font-weight:600;padding:4px 16px;border-radius:20px}
+.price-card h3{font-size:22px;font-weight:700;margin-bottom:4px}
+.price-card .price{font-size:32px;font-weight:700;margin-bottom:20px}
+.price-card .price .unit{font-size:14px;color:var(--text-secondary);font-weight:400}
+.feat-list{list-style:none;margin-bottom:24px}
+.feat-list li{padding:6px 0;font-size:14px;color:var(--text-secondary);display:flex;align-items:center;gap:8px}
+.feat-list li .ck{color:var(--green);font-size:16px}
+.feat-list li .x{color:#ef4444;font-size:16px}
+.highlights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.highlight-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;gap:16px;align-items:flex-start;transition:transform .3s}
+.highlight-card:hover{transform:translateY(-3px)}
+.highlight-card .hl-icon{width:40px;height:40px;border-radius:10px;background:rgba(74,158,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.highlight-card .hl-icon svg{width:20px;height:20px;color:var(--accent)}
+.highlight-card h4{font-size:16px;font-weight:600;margin-bottom:4px}
+.highlight-card p{font-size:13px;color:var(--text-secondary)}
+footer{text-align:center;padding:60px 24px 40px;border-top:1px solid var(--border)}
+footer .fname{font-size:20px;font-weight:700;margin-bottom:4px}
+footer .fver{font-size:13px;color:var(--text-tertiary);margin-bottom:20px}
+footer .fcopy{font-size:12px;color:var(--text-tertiary);margin-top:24px}
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{flex-direction:column;gap:24px}
+  .step-arrow{display:none}
+  .pricing-grid{grid-template-columns:1fr}
+  .highlights-grid{grid-template-columns:1fr}
+  .hero h1{font-size:36px}
+  .hero-features{grid-template-columns:repeat(2,1fr)}
 }
-.panel button:hover{background:rgba(255,255,255,0.12);color:#fff}
-.panel button.on{background:rgba(100,180,255,0.15);border-color:rgba(100,180,255,0.4);color:#8cf;box-shadow:0 0 20px rgba(100,180,255,0.1)}
-
-.info{
-  position:fixed;top:20px;left:50%;transform:translateX(-50%);
-  color:rgba(255,255,255,0.12);font-size:13px;letter-spacing:3px;
-  pointer-events:none;z-index:10;text-align:center;
+@media(max-width:480px){
+  .features-grid{grid-template-columns:1fr}
+  .ai-grid{grid-template-columns:repeat(2,1fr)}
+  .section{padding:60px 16px}
+  .hero h1{font-size:30px}
+  .section-title{font-size:24px}
+  .hero-features{grid-template-columns:1fr}
+  .hero-tags{gap:6px}
 }
-.info span{display:inline-block;margin:0 10px;color:rgba(255,255,255,0.06)}
-
-/* 右侧参数面板 */
-.settings-toggle{
-  position:fixed;top:20px;right:20px;z-index:20;
-  width:38px;height:38px;border-radius:10px;
-  background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.08);
-  color:rgba(255,255,255,0.4);font-size:18px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .3s;pointer-events:all;
-}
-.settings-toggle:hover{background:rgba(255,255,255,0.12);color:#fff}
-
-.settings{
-  position:fixed;top:68px;right:20px;z-index:20;width:240px;
-  padding:18px;background:rgba(0,0,0,0.75);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(255,255,255,0.08);border-radius:14px;
-  transform:translateX(280px);opacity:0;
-  transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .3s;
-  pointer-events:none;
-}
-.settings.open{transform:translateX(0);opacity:1;pointer-events:all}
-
-.settings h3{color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:2px;margin-bottom:14px;font-weight:400}
-
-.slider-group{margin-bottom:12px}
-.slider-group label{
-  display:flex;justify-content:space-between;
-  color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:4px;
-}
-.slider-group label em{color:rgba(100,180,255,0.7);font-style:normal;font-family:monospace}
-input[type=range]{
-  -webkit-appearance:none;width:100%;height:3px;
-  background:rgba(255,255,255,0.1);border-radius:3px;outline:none;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:12px;height:12px;border-radius:50%;
-  background:#6af;cursor:pointer;box-shadow:0 0 8px rgba(100,180,255,0.4);
-}
-
-.toggle-row{
-  display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
-}
-.toggle-row span{color:rgba(255,255,255,0.5);font-size:12px}
-.toggle{cursor:pointer}
-.toggle input{display:none}
-.toggle .t{
-  display:inline-block;width:32px;height:18px;background:rgba(255,255,255,0.1);
-  border-radius:9px;position:relative;transition:.3s;
-}
-.toggle .t:after{
-  content:'';position:absolute;top:2px;left:2px;
-  width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.4);
-  transition:.3s;
-}
-.toggle input:checked+.t{background:rgba(100,180,255,0.3)}
-.toggle input:checked+.t:after{left:16px;background:#6af}
 </style>
 </head>
 <body>
+<canvas id="particle-canvas"></canvas>
 
-<canvas id="c"></canvas>
+<section class="hero" id="top">
+  <div class="hero-content">
+    <h1><span>智绘Studio</span></h1>
+    <p class="tagline">无限画布节点编排 × 多模态 AI 能力 × 智能代理执行<br>一站式 AI 可视化创作平台，让复杂工作流变得简单</p>
 
-<div class="info">
-  <span>✦</span> 移动鼠标 <span>✦</span> 点击爆炸 <span>✦</span> 滚轮缩放 <span>✦</span>
-</div>
+    <div class="hero-features">
+      <div class="hero-feat">
+        <div class="hf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></div>
+        <h4>无限画布</h4>
+        <p>拖拽节点、连线 AI 能力，可视化构建创作流水线</p>
+      </div>
+      <div class="hero-feat">
+        <div class="hf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <h4>14 种 AI 能力</h4>
+        <p>文本、图像、视频、音频、3D 全模态覆盖</p>
+      </div>
+      <div class="hero-feat">
+        <div class="hf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+        <h4>Agent 自动执行</h4>
+        <p>智能代理自动完成复杂创作任务</p>
+      </div>
+    </div>
 
-<div class="settings-toggle" id="toggleSet">⚙</div>
-<div class="settings" id="settings">
-  <h3>参 数 调 节</h3>
-  <div class="slider-group">
-    <label>粒子数 <em id="vCount">220</em></label>
-    <input type="range" id="sCount" min="50" max="600" value="220">
-  </div>
-  <div class="slider-group">
-    <label>粒子速度 <em id="vSpeed">1.0</em></label>
-    <input type="range" id="sSpeed" min="0.1" max="3" step="0.1" value="1">
-  </div>
-  <div class="slider-group">
-    <label>连线距离 <em id="vDist">150</em></label>
-    <input type="range" id="sDist" min="0" max="350" value="150">
-  </div>
-  <div class="slider-group">
-    <label>辉光强度 <em id="vGlow">8</em></label>
-    <input type="range" id="sGlow" min="0" max="30" value="8">
-  </div>
-  <div class="slider-group">
-    <label>拖尾长度 <em id="vTrail">0.05</em></label>
-    <input type="range" id="sTrail" min="0.01" max="0.3" step="0.01" value="0.05">
-  </div>
-  <div class="slider-group">
-    <label>交互半径 <em id="vRadius">200</em></label>
-    <input type="range" id="sRadius" min="50" max="500" value="200">
-  </div>
-  <div class="toggle-row">
-    <span>显示连线</span>
-    <label class="toggle"><input type="checkbox" id="tConn" checked><span class="t"></span></label>
-  </div>
-  <div class="toggle-row">
-    <span>鼠标光晕</span>
-    <label class="toggle"><input type="checkbox" id="tGlow" checked><span class="t"></span></label>
-  </div>
-  <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px">
-    <button id="resetBtn" style="
-      width:100%;padding:7px 0;background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.08);border-radius:8px;
-      color:rgba(255,255,255,0.45);font-size:12px;letter-spacing:2px;
-      cursor:pointer;transition:all .3s;
-    " onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.45)'">↺ 恢复默认</button>
-  </div>
-</div>
+    <div class="hero-tags">
+      <span class="hero-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        本地优先
+      </span>
+      <span class="hero-tag green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        离线可用
+      </span>
+      <span class="hero-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        ComfyUI 联动
+      </span>
+      <span class="hero-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+        可扩展
+      </span>
+      <span class="hero-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        深色主题
+      </span>
+    </div>
 
-<div class="panel" id="panel">
-  <button data-mode="galaxy" class="on">🌌 星河</button>
-  <button data-mode="vortex">🌀 旋涡</button>
-  <button data-mode="aurora">🌈 极光</button>
-  <button data-mode="fire">🔥 火焰</button>
-  <button data-mode="matrix">💧 矩阵</button>
-  <button data-mode="flower">🌸 花绽</button>
-</div>
+    <a href="#pricing" class="btn-cta">获取激活码</a>
+  </div>
+</section>
+
+<section class="section fade-in" id="features">
+  <h2 class="section-title">核心功能</h2>
+  <p class="section-desc">六大模块，覆盖 AI 创作全链路</p>
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg></div>
+      <h3>无限画布</h3>
+      <p>可视化工作流编排 — 节点式编辑器，拖拽连接 AI 能力，构建创作流水线</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+      <h3>AI 能力矩阵</h3>
+      <p>14 种 AI 能力一站集成 — 文本/图像/视频/音频/3D，覆盖全模态创作</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.5" fill="currentColor"/><circle cx="16" cy="12" r="1.5" fill="currentColor"/><circle cx="10" cy="18" r="1.5" fill="currentColor"/></svg></div>
+      <h3>ComfyUI 联动</h3>
+      <p>本地 AI 工作流 — 导入 ComfyUI 工作流，封装为独立应用</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+      <h3>资产中心</h3>
+      <p>多模态素材管理 — 统一管理图片、视频、音频、3D 模型等创作素材</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 6 8 12 8 12s8-6 8-12a8 8 0 0 0-8-8z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h3>智能助手</h3>
+      <p>AI 助手 & 技能系统 — 配置专属 AI 助手，组合技能打造创作流水线</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h3>Agent 空间</h3>
+      <p>自动化创作执行 — 智能代理自动执行复杂创作任务（Pro）</p>
+    </div>
+  </div>
+</section>
+
+<section class="section fade-in" id="ai-matrix">
+  <h2 class="section-title">AI 能力矩阵</h2>
+  <p class="section-desc">覆盖全模态创作，Free 体验核心能力，Pro 解锁完整矩阵</p>
+  <div class="ai-grid">
+    <div class="ai-card fade-in"><span class="ai-tag free">Free</span><h4>文本生成</h4><p>多模型文本创作</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag free">Free</span><h4>图像生成</h4><p>AI 绘图创作</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag free">Free</span><h4>图像理解</h4><p>视觉识别分析</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag free">Free</span><h4>文本嵌入</h4><p>向量化语义理解</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>图像编辑</h4><p>智能修图编辑</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>文生视频</h4><p>文字驱动视频</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>图生视频</h4><p>图片动画生成</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>首尾帧生视频</h4><p>关键帧插值</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>多模态视频</h4><p>混合输入生成</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>视频编辑</h4><p>AI 视频剪辑</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>文本转语音</h4><p>自然语音合成</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>语音克隆</h4><p>音色复制技术</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>音乐生成</h4><p>AI 作曲编曲</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>语音转文字</h4><p>语音识别转录</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>3D 模型生成</h4><p>文字生成 3D</p></div>
+    <div class="ai-card fade-in"><span class="ai-tag pro">Pro</span><h4>图生 3D 模型</h4><p>图片转 3D 资产</p></div>
+  </div>
+</section>
+
+<section class="section fade-in" id="how-it-works">
+  <h2 class="section-title">如何使用</h2>
+  <p class="section-desc">五步开启 AI 创作之旅</p>
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">1</div>
+      <h4>配置 API</h4>
+      <p>接入你常用的 AI 服务</p>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">2</div>
+      <h4>搭建工作流</h4>
+      <p>在无限画布上拖拽节点、连接 AI 能力</p>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">3</div>
+      <h4>运行 & 迭代</h4>
+      <p>一键执行，实时查看结果</p>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">4</div>
+      <h4>管理资产</h4>
+      <p>创作成果自动归档到资产中心</p>
+      <span class="step-arrow">→</span>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">5</div>
+      <h4>导出应用</h4>
+      <p>将工作流封装为独立应用（Pro）</p>
+    </div>
+  </div>
+</section>
+
+<section class="section fade-in" id="pricing">
+  <h2 class="section-title">选择你的方案</h2>
+  <p class="section-desc">免费体验核心能力，专业版解锁完整 AI 创作矩阵</p>
+  <div class="pricing-grid">
+    <div class="price-card fade-in">
+      <h3>免费版</h3>
+      <div class="price">¥0 <span class="unit">永久免费</span></div>
+      <ul class="feat-list">
+        <li><span class="ck">✓</span> 最多 1 个 API 厂商</li>
+        <li><span class="ck">✓</span> 文本生成</li>
+        <li><span class="ck">✓</span> 图像生成</li>
+        <li><span class="ck">✓</span> 图像理解</li>
+        <li><span class="x">✗</span> 图像编辑</li>
+        <li><span class="x">✗</span> 视频生成（4种）</li>
+        <li><span class="x">✗</span> 视频编辑</li>
+        <li><span class="x">✗</span> 音频能力（4种）</li>
+        <li><span class="x">✗</span> 3D 模型生成</li>
+        <li><span class="x">✗</span> Agent 自动执行</li>
+        <li><span class="x">✗</span> 技能系统</li>
+        <li><span class="x">✗</span> 封装应用导出</li>
+        <li><span class="x">✗</span> ComfyUI 封装</li>
+      </ul>
+    </div>
+    <div class="price-card pro fade-in">
+      <h3>专业版 Pro</h3>
+      <div class="price">获取激活码</div>
+      <ul class="feat-list">
+        <li><span class="ck">✓</span> 无限 API 厂商</li>
+        <li><span class="ck">✓</span> 文本生成</li>
+        <li><span class="ck">✓</span> 图像生成</li>
+        <li><span class="ck">✓</span> 图像理解</li>
+        <li><span class="ck">✓</span> 图像编辑</li>
+        <li><span class="ck">✓</span> 视频生成（4种）</li>
+        <li><span class="ck">✓</span> 视频编辑</li>
+        <li><span class="ck">✓</span> 音频能力（4种）</li>
+        <li><span class="ck">✓</span> 3D 模型生成</li>
+        <li><span class="ck">✓</span> Agent 自动执行</li>
+        <li><span class="ck">✓</span> 技能系统</li>
+        <li><span class="ck">✓</span> 封装应用导出</li>
+        <li><span class="ck">✓</span> ComfyUI 封装</li>
+      </ul>
+      <a href="https://rvxq9gb60mp.feishu.cn/wiki/YbyEwEIWDiPpiXkzinnc7YBYndf?from=from_copylink" target="_blank" rel="noreferrer" class="btn-cta" style="width:100%;text-align:center">获取激活码</a>
+    </div>
+  </div>
+</section>
+
+<section class="section fade-in" id="highlights">
+  <h2 class="section-title">软件特色</h2>
+  <p class="section-desc">为创作者打造的专业级 AI 工具</p>
+  <div class="highlights-grid">
+    <div class="highlight-card fade-in">
+      <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+      <div><h4>本地优先</h4><p>数据存储在本地，隐私安全</p></div>
+    </div>
+    <div class="highlight-card fade-in">
+      <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <div><h4>一机一码</h4><p>激活码绑定设备，离线可用</p></div>
+    </div>
+    <div class="highlight-card fade-in">
+      <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+      <div><h4>可扩展</h4><p>支持 ComfyUI 工作流、自定义技能、API 接入</p></div>
+    </div>
+    <div class="highlight-card fade-in">
+      <div class="hl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+      <div><h4>深色主题</h4><p>专业级深色 UI，长时间创作不疲劳</p></div>
+    </div>
+  </div>
+</section>
 
 <script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-let W, H;
-
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-
-// ===== 鼠标 =====
-const mouse = { x: W/2, y: H/2, active: false, down: false, px: W/2, py: H/2 };
-
-canvas.addEventListener('mousemove', e => {
-  mouse.px = mouse.x; mouse.py = mouse.y;
-  mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
-});
-canvas.addEventListener('mouseleave', () => { mouse.active = false; });
-canvas.addEventListener('mousedown', () => { mouse.down = true; });
-canvas.addEventListener('mouseup', () => { mouse.down = false; });
-
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  const t = e.touches[0];
-  mouse.px = mouse.x; mouse.py = mouse.y;
-  mouse.x = t.clientX; mouse.y = t.clientY; mouse.active = true;
-}, { passive: false });
-canvas.addEventListener('touchstart', e => {
-  const t = e.touches[0];
-  mouse.x = t.clientX; mouse.y = t.clientY; mouse.active = true;
-});
-canvas.addEventListener('touchend', () => { mouse.active = false; });
-
-// ===== 滚轮缩放 =====
-let zoom = 1;
-canvas.addEventListener('wheel', e => {
-  e.preventDefault();
-  zoom = Math.max(0.3, Math.min(3, zoom - e.deltaY * 0.001));
-}, { passive: false });
-
-// ===== 颜色 =====
-const themes = {
-  galaxy: {
-    bg: '#05050f',
-    colors: [
-      { h: 220, s: 85, l: 70 }, { h: 190, s: 80, l: 65 },
-      { h: 260, s: 75, l: 70 }, { h: 200, s: 90, l: 75 },
-      { h: 170, s: 70, l: 60 }
-    ],
-    connColor: 'hsla(220,70%,70%,',
-  },
-  vortex: {
-    bg: '#0a0015',
-    colors: [
-      { h: 280, s: 80, l: 70 }, { h: 320, s: 75, l: 65 },
-      { h: 240, s: 70, l: 65 }, { h: 300, s: 85, l: 75 },
-      { h: 260, s: 70, l: 60 }
-    ],
-    connColor: 'hsla(280,70%,70%,',
-  },
-  aurora: {
-    bg: '#020a14',
-    colors: [
-      { h: 150, s: 85, l: 65 }, { h: 180, s: 80, l: 60 },
-      { h: 120, s: 75, l: 55 }, { h: 160, s: 90, l: 70 },
-      { h: 100, s: 70, l: 50 }
-    ],
-    connColor: 'hsla(150,70%,60%,',
-  },
-  fire: {
-    bg: '#0a0400',
-    colors: [
-      { h: 15, s: 90, l: 60 }, { h: 30, s: 95, l: 55 },
-      { h: 0, s: 85, l: 55 }, { h: 45, s: 100, l: 65 },
-      { h: 350, s: 80, l: 50 }
-    ],
-    connColor: 'hsla(20,80%,60%,',
-  },
-  matrix: {
-    bg: '#000a00',
-    colors: [
-      { h: 120, s: 90, l: 50 }, { h: 130, s: 85, l: 45 },
-      { h: 110, s: 95, l: 55 }, { h: 140, s: 80, l: 40 },
-      { h: 100, s: 90, l: 50 }
-    ],
-    connColor: 'hsla(120,80%,50%,',
-  },
-  flower: {
-    bg: '#0a0008',
-    colors: [
-      { h: 330, s: 85, l: 70 }, { h: 350, s: 80, l: 65 },
-      { h: 310, s: 75, l: 65 }, { h: 10, s: 85, l: 70 },
-      { h: 290, s: 80, l: 60 }
-    ],
-    connColor: 'hsla(330,70%,65%,',
-  },
-};
-
-let mode = 'galaxy';
-let theme = themes.galaxy;
-
-function randCol() {
-  const c = theme.colors[Math.floor(Math.random() * theme.colors.length)];
-  return {
-    h: c.h + (Math.random() - 0.5) * 25,
-    s: c.s + (Math.random() - 0.5) * 15,
-    l: c.l + (Math.random() - 0.5) * 15,
-  };
-}
-
-function hsl(h, s, l, a = 1) { return `hsla(${h},${s}%,${l}%,${a})`; }
-
-// ===== 参数 =====
-const P = {
-  count: 220,
-  speed: 1.0,
-  connDist: 150,
-  glow: 8,
-  trail: 0.05,
-  radius: 200,
-  connOn: true,
-  glowOn: true,
-};
-
-// ===== 粒子 =====
-class Particle {
-  constructor(x, y, burst = false) {
-    this.x = x ?? Math.random() * W;
-    this.y = y ?? Math.random() * H;
-    this.col = randCol();
-    this.phase = Math.random() * Math.PI * 2;
-    this.baseSize = 1.5 + Math.random() * 2.5;
-    
-    if (burst) {
-      const a = Math.random() * Math.PI * 2;
-      const sp = 2 + Math.random() * 6;
-      this.vx = Math.cos(a) * sp;
-      this.vy = Math.sin(a) * sp;
-      this.life = 0.5 + Math.random() * 0.5;
-    } else {
-      this.vx = (Math.random() - 0.5) * 0.8;
-      this.vy = (Math.random() - 0.5) * 0.8;
-      this.life = 1;
-    }
-    this.maxLife = this.life;
-    // 特定模式附加属性
-    this.angle = Math.random() * Math.PI * 2;
-    this.orbitSpd = (Math.random() - 0.5) * 0.005;
-    this.orbitR = 30 + Math.random() * 150;
-  }
-
-  update() {
-    const spd = P.speed;
-    
-    switch (mode) {
-      case 'galaxy':
-        this.angle += this.orbitSpd * spd;
-        this.vx += Math.cos(this.angle) * 0.015 * spd;
-        this.vy += Math.sin(this.angle) * 0.015 * spd;
-        break;
-      case 'vortex':
-        const cx = W / 2, cy = H / 2;
-        const dx = this.x - cx, dy = this.y - cy;
-        const d = Math.hypot(dx, dy) + 0.1;
-        const force = 0.002 * spd;
-        this.vx += (-dy / d) * force * 10;
-        this.vy += (dx / d) * force * 10;
-        this.vx += (-dx / d) * force * 0.5;
-        this.vy += (-dy / d) * force * 0.5;
-        break;
-      case 'aurora':
-        this.angle += 0.008 * spd;
-        this.vx += Math.sin(this.y * 0.004 + this.angle) * 0.03 * spd;
-        this.vy += Math.cos(this.x * 0.003 + this.angle) * 0.015 * spd;
-        break;
-      case 'fire':
-        this.vy -= 0.06 * spd;
-        this.vx += (Math.random() - 0.5) * 0.15 * spd;
-        if (this.y < -20) { this.y = H + 20; this.x = Math.random() * W; }
-        break;
-      case 'matrix':
-        this.vy += 0.03 * spd;
-        this.vx *= 0.96;
-        if (this.y > H + 20) { this.y = -20; this.x = Math.random() * W; this.vy = 1 + Math.random() * 2; }
-        break;
-      case 'flower':
-        this.angle += this.orbitSpd * spd * 2;
-        this.vx += Math.cos(this.angle * 3) * 0.02 * spd;
-        this.vy += Math.sin(this.angle * 2) * 0.02 * spd;
-        break;
-    }
-
-    // 鼠标交互
-    if (mouse.active) {
-      const dx = mouse.x - this.x;
-      const dy = mouse.y - this.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < P.radius && dist > 1) {
-        const f = (1 - dist / P.radius) * 0.12 * spd;
-        const dir = mouse.down ? -2.5 : 1;
-        this.vx += (dx / dist) * f * dir;
-        this.vy += (dy / dist) * f * dir;
+(function(){
+  var c=document.getElementById('particle-canvas'),ctx=c.getContext('2d');
+  var W,H,particles=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();
+  window.addEventListener('resize',resize);
+  function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.8+.4;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;this.a=Math.random()*.5+.1}
+  for(var i=0;i<80;i++)particles.push(new P());
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<particles.length;i++){
+      var p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(74,158,255,'+p.a+')';ctx.fill();
+      for(var j=i+1;j<particles.length;j++){
+        var q=particles[j],dx=p.x-q.x,dy=p.y-q.y,d=dx*dx+dy*dy;
+        if(d<14000){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+        ctx.strokeStyle='rgba(74,158,255,'+(1-d/14000)*.15+')';ctx.lineWidth=.6;ctx.stroke()}
       }
     }
-
-    this.vx *= 0.996;
-    this.vy *= 0.996;
-    
-    const maxSpd = 5;
-    const s = Math.hypot(this.vx, this.vy);
-    if (s > maxSpd) { this.vx = (this.vx / s) * maxSpd; this.vy = (this.vy / s) * maxSpd; }
-
-    this.x += this.vx;
-    this.y += this.vy;
-    this.phase += 0.02;
-
-    if (this.life < 1) this.life -= 0.003;
-
-    // 边界环绕 — 部分模式自己管理边界
-    if (!['fire','matrix'].includes(mode)) {
-      if (this.x < -60) this.x = W + 60;
-      if (this.x > W + 60) this.x = -60;
-      if (this.y < -60) this.y = H + 60;
-      if (this.y > H + 60) this.y = -60;
-    }
+    requestAnimationFrame(draw);
   }
-
-  draw() {
-    const pulse = 0.75 + 0.25 * Math.sin(this.phase);
-    const size = this.baseSize * pulse;
-    const alpha = Math.min(1, this.life / Math.max(0.01, this.maxLife));
-    const h = this.col.h + Math.sin(this.phase * 0.5) * 12;
-    
-    // 辉光
-    if (P.glow > 0.5) {
-      ctx.shadowColor = hsl(h, this.col.s, this.col.l, 1);
-      ctx.shadowBlur = size * P.glow * 0.6;
-    } else {
-      ctx.shadowBlur = 0;
-    }
-    
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, Math.max(0.3, size), 0, Math.PI * 2);
-    ctx.fillStyle = hsl(h, this.col.s, this.col.l, alpha);
-    ctx.fill();
-    
-    // 内核
-    ctx.shadowBlur = 0;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, Math.max(0.2, size * 0.35), 0, Math.PI * 2);
-    ctx.fillStyle = hsl(h, this.col.s, Math.min(98, this.col.l + 18), alpha * 0.6);
-    ctx.fill();
-  }
-}
-
-// ===== 连接线 =====
-function drawConns(ps) {
-  const maxD = P.connDist;
-  if (maxD < 10 || !P.connOn) return;
-  ctx.shadowBlur = 0;
-  
-  for (let i = 0; i < ps.length; i++) {
-    for (let j = i + 1; j < ps.length; j++) {
-      const a = ps[i], b = ps[j];
-      const dx = a.x - b.x, dy = a.y - b.y;
-      const d2 = dx * dx + dy * dy;
-      if (d2 > maxD * maxD) continue;
-      const d = Math.sqrt(d2);
-      const al = (1 - d / maxD) * 0.3;
-      const h = (a.col.h + b.col.h) / 2;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = hsl(h, 65, 60, al);
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
-  }
-}
-
-// ===== 背景星 =====
-let stars = [];
-function initStars() {
-  stars = Array.from({ length: 120 }, () => ({
-    x: Math.random() * W, y: Math.random() * H,
-    s: Math.random() * 1.2 + 0.2,
-    p: Math.random() * Math.PI * 2,
-    sp: 0.01 + Math.random() * 0.03,
-  }));
-}
-initStars();
-window.addEventListener('resize', () => { stars.forEach(s => { if (s.x > W) s.x = Math.random() * W; if (s.y > H) s.y = Math.random() * H; }); });
-
-function drawStars() {
-  ctx.shadowBlur = 0;
-  for (const s of stars) {
-    s.p += s.sp;
-    const al = 0.15 + 0.3 * Math.sin(s.p);
-    ctx.fillStyle = `rgba(255,255,255,${al})`;
-    ctx.fillRect(s.x, s.y, s.s, s.s);
-  }
-}
-
-// ===== 系统 =====
-let particles = [];
-
-function init(count) {
-  particles = [];
-  for (let i = 0; i < count; i++) particles.push(new Particle());
-}
-init(P.count);
-
-function burst(x, y, n) {
-  for (let i = 0; i < n; i++) particles.push(new Particle(x, y, true));
-}
-
-// ===== 点击爆炸 =====
-canvas.addEventListener('click', e => { burst(e.clientX, e.clientY, 20); });
-
-// ===== 模式切换 =====
-document.querySelectorAll('.panel button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.panel button').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    mode = btn.dataset.mode;
-    theme = themes[mode];
-    document.body.style.background = theme.bg;
-    particles = [];
-    for (let i = 0; i < P.count; i++) particles.push(new Particle());
-  });
-});
-
-// ===== 设置面板 =====
-document.getElementById('toggleSet').addEventListener('click', () => {
-  document.getElementById('settings').classList.toggle('open');
-});
-
-function bindSlider(id, key, displayId, fmt) {
-  const el = document.getElementById(id);
-  const disp = document.getElementById(displayId);
-  el.addEventListener('input', () => {
-    const v = parseFloat(el.value);
-    P[key] = v;
-    disp.textContent = fmt ? fmt(v) : v;
-    if (key === 'count') {
-      const diff = v - particles.length;
-      if (diff > 0) { for (let i = 0; i < diff; i++) particles.push(new Particle()); }
-      else { particles.splice(v); }
-    }
-  });
-}
-
-bindSlider('sCount', 'count', 'vCount');
-bindSlider('sSpeed', 'speed', 'vSpeed', v => v.toFixed(1));
-bindSlider('sDist', 'connDist', 'vDist');
-bindSlider('sGlow', 'glow', 'vGlow');
-bindSlider('sTrail', 'trail', 'vTrail', v => v.toFixed(2));
-bindSlider('sRadius', 'radius', 'vRadius');
-
-document.getElementById('tConn').addEventListener('change', e => P.connOn = e.target.checked);
-document.getElementById('tGlow').addEventListener('change', e => P.glowOn = e.target.checked);
-
-// ===== 恢复默认 =====
-const defaults = { count: 220, speed: 1, connDist: 150, glow: 8, trail: 0.05, radius: 200, connOn: true, glowOn: true };
-
-document.getElementById('resetBtn').addEventListener('click', () => {
-  Object.assign(P, defaults);
-  // 滑块
-  document.getElementById('sCount').value = P.count;  document.getElementById('vCount').textContent = P.count;
-  document.getElementById('sSpeed').value = P.speed;  document.getElementById('vSpeed').textContent = '1.0';
-  document.getElementById('sDist').value = P.connDist; document.getElementById('vDist').textContent = P.connDist;
-  document.getElementById('sGlow').value = P.glow;    document.getElementById('vGlow').textContent = P.glow;
-  document.getElementById('sTrail').value = P.trail;  document.getElementById('vTrail').textContent = '0.05';
-  document.getElementById('sRadius').value = P.radius; document.getElementById('vRadius').textContent = P.radius;
-  // 开关
-  document.getElementById('tConn').checked = P.connOn;
-  document.getElementById('tGlow').checked = P.glowOn;
-  // 粒子数量同步
-  const diff = P.count - particles.length;
-  if (diff > 0) { for (let i = 0; i < diff; i++) particles.push(new Particle()); }
-  else { particles.splice(P.count); }
-  // 反馈动画
-  const btn = document.getElementById('resetBtn');
-  btn.style.background = 'rgba(100,200,255,0.15)';
-  btn.style.color = '#8cf';
-  btn.style.borderColor = 'rgba(100,200,255,0.3)';
-  setTimeout(() => { btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }, 600);
-});
-
-// ===== 长按喷射 =====
-let burstInt = null;
-canvas.addEventListener('mousedown', () => {
-  burstInt = setInterval(() => {
-    if (mouse.active) burst(mouse.x + (Math.random() - 0.5) * 20, mouse.y + (Math.random() - 0.5) * 20, 3);
-  }, 50);
-});
-canvas.addEventListener('mouseup', () => { clearInterval(burstInt); });
-
-// ===== 动画 =====
-function animate() {
-  requestAnimationFrame(animate);
-
-  const trail = P.trail;
-  ctx.fillStyle = theme.bg + Math.round(trail * 255).toString(16).padStart(2, '0');
-  ctx.fillRect(0, 0, W, H);
-
-  ctx.save();
-  const cx = W / 2, cy = H / 2;
-  ctx.translate(cx, cy);
-  ctx.scale(zoom, zoom);
-  ctx.translate(-cx, -cy);
-
-  drawStars();
-
-  for (const p of particles) p.update();
-
-  // 清理死亡粒子（仅限爆发粒子）
-  for (let i = particles.length - 1; i >= P.count; i--) {
-    if (particles[i].life <= 0) particles.splice(i, 1);
-  }
-
-  drawConns(particles);
-
-  for (const p of particles) p.draw();
-
-  ctx.restore();
-
-  // 鼠标光晕（在缩放层外部）
-  if (mouse.active && P.glowOn) {
-    const r = P.radius * 0.5;
-    const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, r);
-    grad.addColorStop(0, 'rgba(100,180,255,0.05)');
-    grad.addColorStop(1, 'rgba(100,180,255,0)');
-    ctx.shadowBlur = 100;
-    ctx.fillStyle = grad;
-    ctx.fillRect(mouse.x - r, mouse.y - r, r * 2, r * 2);
-  }
-}
-
-animate();
+  draw();
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:.15});
+  document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el)});
+})();
 </script>
 </body>
 </html>
